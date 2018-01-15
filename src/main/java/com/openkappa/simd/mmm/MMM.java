@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class MMM {
 
-  @Param({/*"8", "32", "64", "128", "192", "256", "320", "384", "448", */"512" , "576", "640", "704", "768", "832", "896", "960", "1024"})
+  @Param({"8", "32", "64", "128", "192", "256", "320", "384", "448", "512" , "576", "640", "704", "768", "832", "896", "960", "1024"})
   int size;
 
   private float[] a;
@@ -35,6 +35,12 @@ public class MMM {
   @Benchmark
   public void fastBuffered(Blackhole bh) {
     fastBuffered(a, b, c, size);
+    bh.consume(c);
+  }
+
+  @Benchmark
+  public void tiled(Blackhole bh) {
+    tiled(a, b, c, size);
     bh.consume(c);
   }
 
@@ -117,6 +123,34 @@ public class MMM {
       System.arraycopy(cBuffer, 0, c, in, n);
       Arrays.fill(cBuffer, 0f);
       in += n;
+    }
+  }
+
+  public void tiled(float[] a, float[] b, float[] c, int n) {
+    if (n < 64) { // won't vectorise anyway
+      fast(a, b, c, n);
+      return;
+    }
+    final int width = Math.min(n, n >= 256 ? 512 : 256);
+    final int height = Math.min(n, n >= 512 ? 8 : n >= 256 ? 16 : 32);
+    float[] sum = new float[width];
+    float[] vector = new float[width];
+    for (int rowOffset = 0; rowOffset < n; rowOffset += height) {
+      for (int columnOffset = 0; columnOffset < n; columnOffset += width) {
+        for (int i = 0; i < n; ++i) {
+          for (int j = columnOffset; j < columnOffset + width && j < n; j += width) {
+            System.arraycopy(c, i * n + j, sum, 0, sum.length);
+            for (int k = rowOffset; k < rowOffset + height && k < n; ++k) {
+              float multiplier = a[i * n + k];
+              System.arraycopy(b, k * n  + j, vector, 0, vector.length);
+              for (int l = 0; l < width; ++l) {
+                sum[l] = Math.fma(multiplier, vector[l], sum[l]);
+              }
+            }
+            System.arraycopy(sum, 0, c,i * n + j, sum.length);
+          }
+        }
+      }
     }
   }
 
