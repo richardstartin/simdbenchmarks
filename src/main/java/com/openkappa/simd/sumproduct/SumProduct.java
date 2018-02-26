@@ -11,7 +11,7 @@ import static com.openkappa.simd.DataUtil.createFloatArray;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class SumProduct {
 
-  @Param({//"1024",
+  @Param({"1024",
          "65536"
   })
   int size;
