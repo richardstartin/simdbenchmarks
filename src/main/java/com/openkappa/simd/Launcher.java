@@ -51,8 +51,6 @@ public class Launcher {
             builder = builder.output(parsed.output());
         }
 
-        Runner runner = new Runner(builder.build());
-        runner.list();
-        runner.run();
+        new Runner(builder.build()).run();
     }
 }

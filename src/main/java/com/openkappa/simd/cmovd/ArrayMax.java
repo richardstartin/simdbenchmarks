@@ -10,12 +10,14 @@ import static com.openkappa.simd.DataUtil.createDoubleArray;
 
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class Max {
+public class ArrayMax {
 
   private double[] data1;
   private double[] data2;
 
-  @Param({"1024", "65536"})
+  @Param({//"1024",
+         "65536"
+  })
   int size;
 
   private double threshold;
@@ -39,9 +41,15 @@ public class Max {
   @Benchmark
   public double[] max() {
     double[] out = new double[size];
-    for (int i = 0; i < out.length && i < data2.length; ++i) {
-      out[i] = data1[i] > threshold ? data1[i] : data2[i];
-    }
+    testD(out, data1, data2);
     return out;
+  }
+
+
+
+  void testD(double[] out, double[] in1, double[] in2) {
+    for (int i = 0; i < out.length; i++) {
+      out[i] = (in1[i] > in2[i]) ? in1[i] : in2[i];
+    }
   }
 }
