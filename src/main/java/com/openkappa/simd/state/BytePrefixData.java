@@ -7,8 +7,8 @@ import static com.openkappa.simd.DataUtil.createByteArray;
 @State(Scope.Thread)
 public class BytePrefixData {
 
-    @Param({"10", "100", "1000"})
-    int prefix;
+    @Param({"0.1", "0.5", "1.0"})
+    double prefix;
 
     @Param({"100", "1000", "10000"})
     int size;
@@ -18,11 +18,11 @@ public class BytePrefixData {
 
     @Setup(Level.Trial)
     public void init() {
-        assert size >= prefix;
-        byte[] commonPrefix = createByteArray(prefix);
+        int prefixLength = (int)(prefix * size);
+        byte[] commonPrefix = createByteArray(prefixLength);
         this.data1 = createByteArray(size);
         this.data2 = createByteArray(size);
-        for (int i = 0; i < Math.min(size, prefix); ++i) {
+        for (int i = 0; i < prefixLength; ++i) {
             data1[i] = commonPrefix[i];
             data2[i] = commonPrefix[i];
         }

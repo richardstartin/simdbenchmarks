@@ -23,7 +23,7 @@ public interface ParsedArgs {
     @Option(defaultValue = "Throughput", shortName = "m", longName = "mode")
     Mode mode();
 
-    @Option(defaultValue = "10", shortName = "t", longName = "time-seconds")
+    @Option(defaultValue = "1", shortName = "t", longName = "time-seconds")
     int measurementTime();
 
     @Option(defaultToNull = true, shortName = "o", longName = "output")

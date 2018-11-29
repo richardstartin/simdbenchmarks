@@ -56,8 +56,8 @@ public class Shuffle {
 
 
   @Param({
-          "65536",
-          "131072",
+          //"65536",
+          //"131072",
           "100000000"
   })
   int size;
@@ -65,8 +65,8 @@ public class Shuffle {
   @Param({
           //"RANDOM",
           "THREAD_LOCAL_RANDOM",
-          "SPLITTABLE_RANDOM",
-          "MOD_65536",
+          //"SPLITTABLE_RANDOM",
+          //"MOD_65536",
           "PRECOMPUTED"
   })
   Mode mode;

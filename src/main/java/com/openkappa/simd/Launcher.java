@@ -20,9 +20,8 @@ public class Launcher {
                 .mode(parsed.mode())
                 .measurementTime(TimeValue.seconds(parsed.measurementTime()))
                 .warmupIterations(5)
-                .measurementIterations(10)
+                .measurementIterations(5)
                 .forks(1)
-                .jvmArgsPrepend("-server", "-XX:-TieredCompilation", "-XX:LoopStripMiningIter=0")
                 .shouldFailOnError(true)
                 .verbosity(VerboseMode.EXTRA)
                 .resultFormat(ResultFormatType.CSV);
