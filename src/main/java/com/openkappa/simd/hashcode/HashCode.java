@@ -9,6 +9,13 @@ import static com.openkappa.simd.DataUtil.createIntArray;
 
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Thread)
+@Fork(value = 3, jvmArgsPrepend = {
+        "-XX:-TieredCompilation"
+        ,
+        "-XX:+UnlockExperimentalVMOptions",
+        "-XX:+EnableJVMCI" ,
+        "-XX:+UseJVMCICompiler"
+})
 public class HashCode {
 
 
@@ -21,6 +28,14 @@ public class HashCode {
 
 
     public static void main(String[] args) {
+        System.out.println(31 * 31 * 31 * 31 * 31 * 31 * 31 * 31);
+        System.out.println(31 * 31 * 31 * 31 * 31 * 31 * 31);
+        System.out.println(31 * 31 * 31 * 31 * 31 * 31);
+        System.out.println(31 * 31 * 31 * 31 * 31);
+        System.out.println(31 * 31 * 31 * 31);
+        System.out.println(31 * 31 * 31);
+        System.out.println(31 * 31);
+
         HashCode hashCode = new HashCode();
         hashCode.size = 256;
         hashCode.init();
@@ -56,13 +71,13 @@ public class HashCode {
         int result = 1;
         int i = 0;
         for (; i + 7 < data.length; i += 8) {
-            result = 31 * 31 * 31 * 31 * 31 * 31 * 31 * 31 * result
-                   + 31 * 31 * 31 * 31 * 31 * 31 * 31 * data[i]
-                   + 31 * 31 * 31 * 31 * 31 * 31 * data[i + 1]
-                   + 31 * 31 * 31 * 31 * 31 * data[i + 2]
-                   + 31 * 31 * 31 * 31 * data[i + 3]
-                   + 31 * 31 * 31 * data[i + 4]
-                   + 31 * 31 * data[i + 5]
+            result = -1807454463 * result
+                   + 1742810335 * data[i]
+                   + 887503681 * data[i + 1]
+                   + 28629151 * data[i + 2]
+                   + 923521 * data[i + 3]
+                   + 29791 * data[i + 4]
+                   + 961 * data[i + 5]
                    + 31 * data[i + 6]
                    + data[i + 7]
                     ;
@@ -100,6 +115,7 @@ public class HashCode {
         }
         return result;
     }
+
 
 
 

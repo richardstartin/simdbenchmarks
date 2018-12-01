@@ -11,7 +11,14 @@ import static com.openkappa.simd.DataUtil.createIntArray;
 
 
 @State(Scope.Thread)
-@OutputTimeUnit(TimeUnit.SECONDS)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Fork(value = 3, jvmArgsPrepend = {
+        "-XX:-TieredCompilation"
+//        ,
+//        "-XX:+UnlockExperimentalVMOptions",
+//        "-XX:+EnableJVMCI" ,
+//        "-XX:+UseJVMCICompiler"
+})
 public class SumOfSquaresBlogPost {
 
 
@@ -23,7 +30,7 @@ public class SumOfSquaresBlogPost {
   private int[] intData;
 
 
-  @Setup(Level.Iteration)
+  @Setup(Level.Trial)
   public void init() {
     this.data = createDoubleArray(size);
     this.intData = createIntArray(size);

@@ -9,6 +9,13 @@ import static com.openkappa.simd.DataUtil.createByteArray;
 
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Fork(value = 3, jvmArgsPrepend = {
+        "-XX:-TieredCompilation"
+//        ,
+//        "-XX:+UnlockExperimentalVMOptions",
+//        "-XX:+EnableJVMCI" ,
+//        "-XX:+UseJVMCICompiler"
+})
 public class Base64 {
 
   @Param({"1024", "2048", "3072", "4096"})
@@ -28,11 +35,11 @@ public class Base64 {
     encoded = encoder.encode(data);
   }
 
-//  @Benchmark
-//  public void decode(Blackhole bh) {
-//    decoder.decode(encoded, data);
-//    bh.consume(data);
-//  }
+  @Benchmark
+  public void decode(Blackhole bh) {
+    decoder.decode(encoded, data);
+    bh.consume(data);
+  }
 
   @Benchmark
   public void encode(Blackhole bh) {
@@ -40,9 +47,9 @@ public class Base64 {
     bh.consume(encoded);
   }
 
-  @Benchmark
-  public void decoupled(Blackhole bh) {
-    StreamingBase64.encodeChunkBuffered(data, encoded);
-    bh.consume(encoded);
-  }
+//  @Benchmark
+//  public void decoupled(Blackhole bh) {
+//    StreamingBase64.encodeChunkBuffered(data, encoded);
+//    bh.consume(encoded);
+//  }
 }
